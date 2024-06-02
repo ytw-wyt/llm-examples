@@ -1,12 +1,19 @@
 import streamlit as st
-import anthropic
+from streamlit_extras.switch_page_button import switch_page
 
-with st.sidebar:
-    anthropic_api_key = st.text_input("Anthropic API Key", key="file_qa_api_key", type="password")
-    "[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/1_File_Q%26A.py)"
-    "[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)"
+st.text("What are you looking to learn today?")
+st.header("Input your customized course topic")
 
-st.title("📝 File Q&A with Anthropic")
+current_step = st.progress(100)
+
+col1, col2 = st.columns([1,1])
+with col1:
+    st.page_link("pages/1_step1.py", label="State your learning goal", icon="1️⃣")
+
+with col2:
+    st.page_link("pages/2_step2.py", label="Upload your research papers", icon="2️⃣")
+
+
 uploaded_file = st.file_uploader("Upload an article", type=("txt", "md"))
 question = st.text_input(
     "Ask something about the article",
@@ -31,3 +38,12 @@ if uploaded_file and question and anthropic_api_key:
     )
     st.write("### Answer")
     st.write(response.completion)
+
+col1, col2 = st.columns([5,1])
+with col1:
+    if st.button("Back"): 
+        switch_page("step1")
+
+with col2:
+    if st.button("Next"):
+        switch_page("step3")
