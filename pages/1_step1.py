@@ -23,19 +23,41 @@ with col1:
 with col2:
     st.page_link("pages/2_step2.py", label="Upload your research papers", icon="2️⃣", disabled=True)
 
+# Initialize session state if it does not exist
+if 'topic' not in st.session_state:
+    st.session_state.topic = None
 
-option = st.selectbox(
+if 'learning_objective' not in st.session_state:
+    st.session_state.learning_objective = ""
+
+st.session_state.topic = st.selectbox(
     "Select a topic",
-    ("Social Emotional Learning", "Mastery of Content", "Advocary", "Building Relationships", "Utilizing Technology Tools", "Domain Specific Knowledge"),
-    index = None,
-    ), 
-
-text_input = st.text_input(
-        "What's your learning objective?",
-        label_visibility=st.session_state.visibility,
-        disabled=st.session_state.disabled,
-        # placeholder=st.session_state.placeholder,
+    (
+        "Social Emotional Learning", 
+        "Mastery of Content", 
+        "Advocary", 
+        "Building Relationships", 
+        "Utilizing Technology Tools", 
+        "Domain Specific Knowledge"
     ),
+    index=None if st.session_state.topic is None else (
+        ["Social Emotional Learning", "Mastery of Content", "Advocary", "Building Relationships", "Utilizing Technology Tools", "Domain Specific Knowledge"].index(st.session_state.topic)
+    )
+)
+# Text input for learning objective
+st.session_state.learning_objective = st.text_input(
+    "What's your learning objective?",
+    value=st.session_state.learning_objective,
+    label_visibility="visible",
+    disabled=False,
+    placeholder="Enter your objective here..."
+)
+# text_input = st.text_input(
+#         "What's your learning objective?",
+#         label_visibility=st.session_state.visibility,
+#         disabled=st.session_state.disabled,
+#         # placeholder=st.session_state.placeholder,
+#     ),
 
 col1, col2 = st.columns([5,1])
 with col1:
