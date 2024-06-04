@@ -15,20 +15,23 @@ st.text("What are you looking to learn today?")
 st.header("Input your customized course topic")
 
 current_step = st.progress(50)
-
-col1, col2 = st.columns([1,1])
-with col1:
-    st.page_link("pages/step1.py", label="State your learning goal", icon="1️⃣")
-
-with col2:
-    st.page_link("pages/step2.py", label="Upload your research papers", icon="2️⃣", disabled=True)
-
 # Initialize session state if it does not exist
 if 'topic' not in st.session_state:
     st.session_state.topic = None
 
 if 'learning_objective' not in st.session_state:
     st.session_state.learning_objective = ""
+
+col1, col2 = st.columns([1,1])
+with col1:
+    st.page_link("pages/step1.py", label="State your learning goal", icon="1️⃣")
+
+if st.session_state.topic and st.session_state.learning_objective:
+    with col2:
+        st.page_link("pages/step2.py", label="Upload your research papers", icon="2️⃣", disabled=False)
+else:
+    with col2:
+        st.page_link("pages/step2.py", label="Upload your research papers", icon="2️⃣", disabled=True)
 
 st.session_state.topic = st.selectbox(
     "Select a topic",
@@ -52,17 +55,18 @@ st.session_state.learning_objective = st.text_input(
     disabled=False,
     placeholder="Enter your objective here..."
 )
-# text_input = st.text_input(
-#         "What's your learning objective?",
-#         label_visibility=st.session_state.visibility,
-#         disabled=st.session_state.disabled,
-#         # placeholder=st.session_state.placeholder,
-#     ),
 
 col1, col2 = st.columns([5,1])
-with col1:
-    if st.button("Back"): pass
 
-with col2:
-    if st.button("Next"):
-        switch_page("step2")
+# with col2:
+#     if st.button("Next"):
+#         if
+#         switch_page("step2")
+
+if st.session_state.topic and st.session_state.learning_objective:
+    with col2:
+        if st.button("Next"):
+            switch_page("step2")
+else:
+    with col2:
+        st.button("Next", disabled=True)
