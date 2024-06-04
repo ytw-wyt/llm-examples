@@ -8,6 +8,3 @@ col1, col2 = st.columns([5,1])
 with col1:
     if st.button("Previous"): 
         switch_page("step3 result3")
-
-with col2:
-    if st.button("Next"): pass
