@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
 
-st.write(st.session_state.generated_course_2)
+st.write(st.session_state.generated_course_3)
 # Navigation buttons
 col1, col2 = st.columns([5,1])
 

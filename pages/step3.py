@@ -20,8 +20,9 @@ if 'generated_course_4' not in st.session_state:
 
 def main():
     clear_cache()
-    with st.spinner("We have all we needed. Loading the result."):
-        time.sleep(2)
+    if "result_1" == None:
+        with st.spinner("We have all we needed. Loading the result."):
+            time.sleep(3)
     result_1 = generate_course_section(st.session_state.key, st.session_state.text, st.session_state.template1)
     result_2 = generate_course_section(st.session_state.key, st.session_state.text, st.session_state.template2)
     result_3 = generate_course_section(st.session_state.key, st.session_state.text, st.session_state.template3)
