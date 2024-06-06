@@ -24,7 +24,7 @@ if 'learning_objective' not in st.session_state:
 
 col1, col2 = st.columns([1,1])
 with col1:
-    st.page_link("pages/step1.py", label="State your learning goal", icon="1️⃣")
+    st.page_link("step1.py", label="State your learning goal", icon="1️⃣")
 
 if st.session_state.topic and st.session_state.learning_objective:
     with col2:
@@ -57,11 +57,6 @@ st.session_state.learning_objective = st.text_input(
 )
 
 col1, col2 = st.columns([5,1])
-
-# with col2:
-#     if st.button("Next"):
-#         if
-#         switch_page("step2")
 
 if st.session_state.topic and st.session_state.learning_objective:
     with col2:

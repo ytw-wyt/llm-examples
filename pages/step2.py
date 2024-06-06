@@ -307,7 +307,7 @@ def main():
 
     col1, col2 = st.columns([1,1])
     with col1:
-        st.page_link("pages/step1.py", label="State your learning goal", icon="1️⃣")
+        st.page_link("step1.py", label="State your learning goal", icon="1️⃣")
 
     with col2:
         st.page_link("pages/step2.py", label="Upload your research papers", icon="2️⃣")
