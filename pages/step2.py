@@ -316,7 +316,7 @@ def main():
 
     # clear_cache()
 
-    uploaded_files = st.file_uploader("Upload PDF files", type=["pdf"], accept_multiple_files=True)
+    uploaded_files = st.file_uploader("Upload PDF files(please enter less than five files)", type=["pdf"], accept_multiple_files=True)
     
     col1, col2 = st.columns([3.5,1.5])
     with col1:
