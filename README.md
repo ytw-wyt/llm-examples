@@ -1,5 +1,6 @@
-# 🎈 Streamlit + LLM Examples App
+# 🎈 Streamlit App for lesson generation using RAG model
 
+References:
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)
 
 Starter examples for building LLM apps with Streamlit.
