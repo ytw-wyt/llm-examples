@@ -14,6 +14,8 @@ from streamlit_extras.switch_page_button import switch_page
 prompt_template = """
 You are an expert course generator tasked with creating a comprehensive tutor training course for online math tutors. Use the retrieved information to answer the question and follow the template the user gives you, but you should not refer to the template context. Please generate a course based on the research paper. The users of the course are novice tutors who are experts in the math subjects they are teaching but unfamiliar with the best method of teaching what they know to the students. The course should have a course title and some practical examples (each scenario should have 4 questions) and some practical research recommendation examples for the tutor to show how they could perform in their classrooms.
 
+For the contents you generated, please make sure the Flesch-Kincaid Score is below 10.
+
 If you don't know the answer, just say "I don't know".
 {context}
 Question: {question}
@@ -103,7 +105,7 @@ Reason:This question aims to delve into the thought process of participants, ens
 Please design a matching question that aligns with expert-recommended tutoring strategies. The question should include a table with two columns. The first column contains a realistic conversation between a tutor and a student about a math topic. The second column contains a set of multiple-choice questions, each highlighting a part of the tutor's conversation. The student needs to match these highlighted parts with the appropriate tutoring strategy. Use the following structure:
 * Provide a realistic conversation between a tutor and a student, including multiple steps to help resolve the student's challenge.
 * Highlight three parts of the conversation where the tutor is using specific strategies to teach the math topic.
-* Create a menu with five options representing real-world effective strategies to teach the topic.
+* Create a menu with four options representing real-world effective strategies to teach the topic. And the strategy mentioned here in the options should be consistent with the research insights table I need your help to generate later. 
 * For each highlighted part of the conversation, repeat the menu of options and ask the student to select the strategy that most closely matches the conversation part.
 * Indicate the correct answer and provide reasons for the incorrect options.
 
@@ -111,7 +113,7 @@ Example Table Template:
 
 | Conversation   | Options |
 | -------- | ------- |
-|   A conversation happening with tutor and the student, including multiple steps to help resolve the challenge of the student. Highlight 3 parts of the conversation where the tutor is using some strategy to tutor the student about the math topic. |  Menu with: 5 options about the real-world effective strategy to teach this topic related to the 3 highlighted conversation parts. (Correct Answer: the strategy that most matches this part of the conversation), (Incorrect Ones: please state the reason). For other parts of the conversation, repeat the same menu with the same options. Repeat the MCQ menu 3 times.  |
+|   A conversation happening with tutor and the student, including multiple steps to help resolve the challenge of the student. Highlight 3 parts of the conversation where the tutor is using some strategy to tutor the student about the math topic. |  Menu with: 4 options about the real-world effective strategy to teach this topic related to the 3 highlighted conversation parts.  And the strategy mentioned here in the options should be consistent with the research insights table wI need your help to generate later.  (Correct Answer: the strategy that most matches this part of the conversation), (Incorrect Ones: please state the reason). For other parts of the conversation, repeat the same menu with the same options. Repeat the MCQ menu 3 times.  |
 
 
 """
@@ -175,7 +177,7 @@ Reason:This question aims to delve into the thought process of participants, ens
 Please design a matching question that aligns with expert-recommended tutoring strategies. The question should include a table with two columns. The first column contains a realistic conversation between a tutor and a student about a math topic. The second column contains a set of multiple-choice questions, each highlighting a part of the tutor's conversation. The student needs to match these highlighted parts with the appropriate tutoring strategy. Use the following structure:
 * Provide a realistic conversation between a tutor and a student, including multiple steps to help resolve the student's challenge.
 * Highlight three parts of the conversation where the tutor is using specific strategies to teach the math topic.
-* Create a menu with five options representing real-world effective strategies to teach the topic.
+* Create a menu with four options representing real-world effective strategies to teach the topic. And the strategy mentioned here in the options should be consistent with the research insights table I need your help to generate later. 
 * For each highlighted part of the conversation, repeat the menu of options and ask the student to select the strategy that most closely matches the conversation part.
 * Indicate the correct answer and provide reasons for the incorrect options.
 
@@ -183,7 +185,7 @@ Example Table Template:
 
 | Conversation   | Options |
 | -------- | ------- |
-|   A conversation happening with tutor and the student, including multiple steps to help resolve the challenge of the student. Highlight 3 parts of the conversation where the tutor is using some strategy to tutor the student about the math topic. |  Menu with: 5 options about the real-world effective strategy to teach this topic related to the 3 highlighted conversation parts. (Correct Answer: the strategy that most matches this part of the conversation), (Incorrect Ones: please state the reason). For other parts of the conversation, repeat the same menu with the same options. Repeat the MCQ menu 3 times.  |
+|   A conversation happening with tutor and the student, including multiple steps to help resolve the challenge of the student. Highlight 3 parts of the conversation where the tutor is using some strategy to tutor the student about the math topic. |  Menu with: 4 options about the real-world effective strategy to teach this topic related to the 3 highlighted conversation parts. And the strategy mentioned here in the options should be consistent with the research insights table wI need your help to generate later. (Correct Answer: the strategy that most matches this part of the conversation), (Incorrect Ones: please state the reason). For other parts of the conversation, repeat the same menu with the same options. Repeat the MCQ menu 3 times.  |
 
 
 """
@@ -308,7 +310,7 @@ def main():
 
     # clear_cache()
 
-    uploaded_files = st.file_uploader("Upload PDF files(please enter less than five files)", type=["pdf"], accept_multiple_files=True)
+    uploaded_files = st.file_uploader("Upload PDF files (please enter less than five files)", type=["pdf"], accept_multiple_files=True)
     
     col1, col2 = st.columns([3.5,1.5])
     with col1:
