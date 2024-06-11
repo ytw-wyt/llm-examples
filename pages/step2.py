@@ -1,10 +1,10 @@
 import streamlit as st
 from langchain_community.vectorstores import Chroma
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.schema import Document
-from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from PyPDF2 import PdfReader
 
@@ -24,88 +24,95 @@ Question: {question}
 template_1 = """
 Do you know what math topic the paper is talking about? Can you generate a scenario-based tutor training course about how to teach the mathematic topic effectively as discussed in the retrieved research paper?
 
-I need your help to generate the course title, description, and learning objectives, please follow the below template.
+I need your help to generate the course title, description and learning objectives, please follow the below template.
 
 Course Title: Generate a title of this math course using three words, the title should begin with a verb. It should be related to the specific math topic of the research paper and the course objective.
 Example titles are: Using polite language, Managing inequity, Managing effective praise
 
-Description: A short description about the purpose of this course and why. The structure could be similar to: Have you ever met a situation where you want to teach [the math topic] but you find yourself unable to explain the concept clearly to the students? In this module, we will be introducing [strategy name] as a way of tutoring students about [the math topic].
+
+Description: A short description about the purpose of this course and why. The structure could be similar to :  Have you ever met a situation where you want to teach [the math topic] but you find yourself unable to explain the concept clearly to the students? In this module, we will be introducing [strategy name] as a way of tutoring students about [the math topic].
+
 
 Learning Objectives:
-Requirement for generation: The learning objectives should address the "understanding" and the "creating" level of Bloom's taxonomy. Creating means using information to create something new, understanding means grasping the meaning of instructional materials.
+Requirement for generation: You should generate 2 learning objectives. The learning objectives should address the "understanding" and the "creating" level of Bloom's taxonomy.
+Creating meanse use information to create something new, understanding means grasp meaning of instructional materials. You should generate two learning objectives.
 
-Objective 1: Describe the expected outcome concerning the first objective.
+Objective 1: Describe the expected outcome of this course.
 Objective 2: Outline what learners will achieve by the end of this module regarding the second objective.
-Add additional objectives as necessary.
 
-One of the objectives should clearly state the strategy that is advocated in the retrieved research paper about the most effective way to teach this math topic.
+One of the objectives should clearly state the most effective strategy about teaching this math topic that is advocated in the retrieved research paper.
 
 You don't need to generate the specific scenario at this time.
 """
 ## 2. template for generate scenario 1
 
 template_2 = """
-Can you generate the scenario-based math tutor training course about the below course title and learning objective based on the retrieved research paper? Please follow the below template to generate the first scenario for the training course based on the title and the learning objective.
+Can you generate the scenario-based math tutor training course's first scenario about the below course title and learning objective based on the retrieved research paper? Please follow the below template to generate the first scenario for the training course based on the title and the learning objective.
+
+Please generate the math equation directly, rather than giving word in latex format like 'fraction'.
 
 Background information:
 
-{ Put the result for the couse title here : the course title and course learning objectives}
+{Course title + Description + Learning Objective generated }
 
 You don't need to show the above information again in your output.
 
-You need to generate:
+You need to generate below components:
 
 Scenario Description:
 
-Scenario 1:[The Initial Training Scenario describing a common challenge or issue a student is facing when a teacher is tutoring this math topic ]
-Context: Please generate a scenario involving a challenge related to the math topic of the paper for a student named [Student Name]. The scenario should include the student encountering a problem or challenge related to [specific math topic or situation], their emotional response to the challenge, and how they address or resolve the problem.
-The scenario context could be 3 - 4 sentences.
+Scenario 1: [The Initial Training Scenario describing a common challenge or issue a student is facing when a teacher is tutoring this math topic]
 
-Questions: Design Four New questions about this scenario
+Context: Please generate a scenario involving a challenge related to the math topic of the paper for a student named [Student Name]. 
+The scenario should be about the student encountering a problem or challenge related to [the specific math topic or situation], and their response to the challenge. 
+Focus on what part of learning the math topic makes the student feel frustrated.
 
-1.Constructed-response Open-Ended Question (Motivation):
+Scenario Context (3-4 sentences):[Generated scenario context]
 
-[Structure]
-Question: Ask participants to propose their response or solution to the scenario, directly addressing the mathmatical topic related issue in the scenario.
+Questions: Design Four New Questions about this Scenario
+
+1. Constructed-response Open-Ended Question (Motivation):
+Question: Ask participants to propose their response or solution to the scenario, directly addressing the mathematical topic related issue in the scenario.
 Purpose: Initial reaction, free expression.
 Reason: Encourages creative thinking and reflection.
 
+
 2. Selected-response Question (Assessment of Understanding):
-
-[Structure]
-Question: Present 4 possible responses or strategies about how to teach this math topic based on your knowledge base and the research paper that could be applied in the scenario. Ask tutors to order the options based on what they believe is most effective. Mark the correct response and give the reason why the others are not correct.
-
-4 Options:
-
-The options should all be practical real-life conversation for the tutor to teach the math topic.
-Requirements: Make one option the most effective one -- most relative to the research recommendations in the paper. The four options should be 4 ways to teach the math topic in classrooms. Make sure all four options are similar in length.
-Hint: You can consider to use some real-life math manipulatives to add to your examples, but they should be related to the strategy. eg. pizza, cup, cake.
-
-Write your 4 options A,B,C,D here according to the requirements.
-
-Also mark your correct answer and incorrect answer.
-Correct Answer: The option should aligns well with the recommended teaching strategy in the research paper. Give the reason for why it is correct and how it relates to the research paper you retrieved.
-Incorrect Answers: Give the reason for each incorrect answers.
-
-
-3.  Constructed-response Open-Ended Question (Justification):
-Question: Ask participants to explain why they chose the specific option in the previous multiple-choice question.
-Purpose: Encourage deep reasoning and reflection to Reinforce tutor's understanding and justification.
+Question: Present 4 possible tutor responses about how to teach this math topic effectively with varied appropriateness that could be applied in the scenario. Ask tutors to choose the option they believe is most effective. Mark the correct response and give the reason why the others are not correct.
+4 Options: The options should all be practical real-life conversations for the tutor to teach the math topic to the student in an online math tutoring session.
+Requirements:
+* Make one option the correct one.
+* Among the three distractors, one should be obviously wrong/unrelated to the situation.
+* The other two should be close distractions that would seem appropriate in other situations but not aligned with the recommendation of the paper.
+* Ensure all four options are similar in length.
+* Consider using some real-life math manipulatives in your examples (e.g., pizza, cup, cake) related to the strategy.
+Options:
+* A. [Option A]
+* B. [Option B]
+* C. [Option C]
+* D. [Option D]
+Mark the correct one and explain why the others are incorrect.
 
 
-4.  Selected-response Multiple Choice Question (Alignment with the expert-recommended strategy):
+3. Constructed-response Open-Ended Question (Justification):
+Question:Ask participants to explain why they chose the specific option in the previous question, detailing the reasoning behind their selection.
+Purpose:Encourage deep reasoning and reflection to reinforce the tutor's understanding and justification.
+Reason:This question aims to delve into the thought process of participants, ensuring they can justify their choices and demonstrate a solid grasp of effective teaching strategies related to the scenario.
 
-Question: Present a set of real-life practical examples (statements but not conversations) related to the tutor course topic and learning objectives that align with the responses in the previous questions, ask participants to select the statement that best aligns with their chosen response in previous questions.
+4.Matching Questions
+Please design a matching question that aligns with expert-recommended tutoring strategies. The question should include a table with two columns. The first column contains a realistic conversation between a tutor and a student about a math topic. The second column contains a set of multiple-choice questions, each highlighting a part of the tutor's conversation. The student needs to match these highlighted parts with the appropriate tutoring strategy. Use the following structure:
+* Provide a realistic conversation between a tutor and a student, including multiple steps to help resolve the student's challenge.
+* Highlight three parts of the conversation where the tutor is using specific strategies to teach the math topic.
+* Create a menu with five options representing real-world effective strategies to teach the topic.
+* For each highlighted part of the conversation, repeat the menu of options and ask the student to select the strategy that most closely matches the conversation part.
+* Indicate the correct answer and provide reasons for the incorrect options.
 
-Write your 4 options A,B,C,D here according to the requirements.
-Also mark your correct answer and incorrect answer.
-Correct Answer: The option should aligns well with the recommended teaching strategy in the research paper. Give the reason for why it is correct and how it relates to the research paper you retrieved.
-Incorrect Answers: Give the reason for each incorrect answers.
+Example Table Template:
 
+| Conversation   | Options |
+| -------- | ------- |
+|   A conversation happening with tutor and the student, including multiple steps to help resolve the challenge of the student. Highlight 3 parts of the conversation where the tutor is using some strategy to tutor the student about the math topic. |  Menu with: 5 options about the real-world effective strategy to teach this topic related to the 3 highlighted conversation parts. (Correct Answer: the strategy that most matches this part of the conversation), (Incorrect Ones: please state the reason). For other parts of the conversation, repeat the same menu with the same options. Repeat the MCQ menu 3 times.  |
 
-Correct Answer: Generally aligns with the supportive rationale and the tutoring strategy mentioned in the research paper and the learning objective.
-Purpose: Connects action with theory.
-Reason: Encourages informed decision-making.
 
 """
 
@@ -113,77 +120,70 @@ Reason: Encourages informed decision-making.
 ## 3. template for generate scenario 2
 
 template_3 = """
-Can you generate Scenario 2 about how to teach this math topic based on the retrieved research paper? Please follow the below template.
-
-
-The template for Scenario 2's Context is:
-
-Scenario 2:
-Context: [The Transfer Scenario about this topic]
-
-Scenario 1 is: 'Alex is a middle school student who struggles with the concept of dividing '
- 'fractions. During an online tutoring session, Alex encounters a problem '
- 'where he needs to divide 1 3/4 kg of sugar into packs of 1/2 kg each. '
- 'Frustrated and confused, Alex exclaims, "I don\'t get why we can\'t just '
- 'subtract the fractions! Why do we have to do all this flipping and '
- 'multiplying?" Alex’s emotional response includes a mix of frustration and '
- 'confusion, leading to a lack of confidence in solving the problem. The tutor '
- 'needs to address Alex’s confusion and help him understand the correct '
- 'procedure for dividing fractions.
-
-You don't need to generate Scenario 1 again.
-Do not generate 'frac', but generate the math equation directly.
-
-The situation of another student [new student name] in Scenario 2 will be different from Scenario 1 but analogous to it.  That is, it should have different surface features but should be about math tutoring and address the same learning objectives.
+Can you generate the scenario-based math tutor training course's second scenario about the below course title and learning objective based on the retrieved research paper? Please follow the below template to generate the second scenario for the training course based on the title and the learning objective.
+The situation of another student [use a new student name] in Scenario 2 will be different from Scenario 1 but analogous to it.  That is, it should have different surface features but should be about math tutoring and address the same learning objectives.
 It should be the same difficulty to answer as Scenario 1. The length will also be the same.
 
-You should also generate the below questions:
+Background information:
+{Course title + Description + Learning Objective generated + Scenario 1 generated}
 
-Questions: Design Four New questions about scenario 2
 
-1.Constructed-response Open-Ended Question (Motivation):
+You don't need to show the above information again in your output. You need to generate a completely different scenario, the structure will be as below.
 
-[Structure]
-Question: Ask participants to propose their response or solution to the scenario, directly addressing the mathmatical topic related issue in the scenario.
+You need to generate below components:
+
+
+Scenario 2: [The Transfer Training Scenario describing a common challenge or issue a student is facing when a teacher is tutoring this math topic]
+
+Context: Please generate a scenario involving a challenge related to the math topic of the paper for a student named [New Student Name]. 
+The scenario should be about the student encountering a problem or challenge related to [the specific math topic or situation], and their response to the challenge. 
+Focus on what part of learning the math topic makes the student feel frustrated.
+
+Scenario Context (3-4 sentences):[Generated scenario context]
+
+Questions: Design Four New Questions about this Scenario
+
+1. Constructed-response Open-Ended Question (Motivation):
+Question: Ask participants to propose their response or solution to the scenario, directly addressing the mathematical topic related issue in the scenario.
 Purpose: Initial reaction, free expression.
 Reason: Encourages creative thinking and reflection.
 
+
 2. Selected-response Question (Assessment of Understanding):
-
-[Structure]
-Question: Present 4 possible responses or strategies with varied appropriateness that could be applied in the scenario. Ask tutors to choose the option they believe is most effective. Mark the correct response and give the reason why the others are not correct.
-
-4 Options:
-
-The options should all be practical real-life conversation for the tutor (you) to teach the math topic.
-Requirements: Make one option the correct one. Among the three distractors, one of them should be obviously wrong/unrelated to the situation and the other two should be close distractions that would seem appropriate in other situations but not aligned with the recommendation of the paper. Also make sure all four options are similar in length.
-Hint: You can consider to use some real-life math manipulatives to add to your examples, but they should be related to the strategy. eg. pizza, cup, cake.
-
-Write your 4 options A,B,C,D here according to the requirements.
-
-Also mark your correct answer and incorrect answer.
-Correct Answer: The option should aligns well with the recommended teaching strategy in the research paper. Give the reason for why it is correct and how it relates to the research paper you retrieved.
-Incorrect Answers: Give the reason for each incorrect answers.
-
-
-3.  Constructed-response Open-Ended Question (Justification):
-Question: Ask participants to explain why they chose the specific option in the previous multiple-choice question.
-Purpose: Encourage deep reasoning and reflection to Reinforce tutor's understanding and justification.
+Question: Present 4 possible tutor responses about how to teach this math topic effectively with varied appropriateness that could be applied in the scenario. Ask tutors to choose the option they believe is most effective. Mark the correct response and give the reason why the others are not correct.
+4 Options: The options should all be practical real-life conversations for the tutor to teach the math topic to the student in an online math tutoring session.
+Requirements:
+* Make one option the correct one.
+* Among the three distractors, one should be obviously wrong/unrelated to the situation.
+* The other two should be close distractions that would seem appropriate in other situations but not aligned with the recommendation of the paper.
+* Ensure all four options are similar in length.
+* Consider using some real-life math manipulatives in your examples (e.g., pizza, cup, cake) related to the strategy.
+Options:
+* A. [Option A]
+* B. [Option B]
+* C. [Option C]
+* D. [Option D]
+Mark the correct one and explain why the others are incorrect.
 
 
-4.  Selected-response Multiple Choice Question (Alignment with the expert-recommended strategy):
+3. Constructed-response Open-Ended Question (Justification):
+Question:Ask participants to explain why they chose the specific option in the previous question, detailing the reasoning behind their selection.
+Purpose:Encourage deep reasoning and reflection to reinforce the tutor's understanding and justification.
+Reason:This question aims to delve into the thought process of participants, ensuring they can justify their choices and demonstrate a solid grasp of effective teaching strategies related to the scenario.
 
-Question: Present a set of real-life practical examples (statements but not conversations) related to the tutor course topic and learning objectives that align with the responses in the previous questions, ask participants to select the statement that best aligns with their chosen response in previous questions.
+4.Matching Questions
+Please design a matching question that aligns with expert-recommended tutoring strategies. The question should include a table with two columns. The first column contains a realistic conversation between a tutor and a student about a math topic. The second column contains a set of multiple-choice questions, each highlighting a part of the tutor's conversation. The student needs to match these highlighted parts with the appropriate tutoring strategy. Use the following structure:
+* Provide a realistic conversation between a tutor and a student, including multiple steps to help resolve the student's challenge.
+* Highlight three parts of the conversation where the tutor is using specific strategies to teach the math topic.
+* Create a menu with five options representing real-world effective strategies to teach the topic.
+* For each highlighted part of the conversation, repeat the menu of options and ask the student to select the strategy that most closely matches the conversation part.
+* Indicate the correct answer and provide reasons for the incorrect options.
 
-Write your 4 options A,B,C,D here according to the requirements.
-Also mark your correct answer and incorrect answer.
-Correct Answer: The option should aligns well with the recommended teaching strategy in the research paper. Give the reason for why it is correct and how it relates to the research paper you retrieved.
-Incorrect Answers: Give the reason for each incorrect answers.
+Example Table Template:
 
-
-Correct Answer: Generally aligns with the supportive rationale and the tutoring strategy mentioned in the research paper and the learning objective.
-Purpose: Connects action with theory.
-Reason: Encourages informed decision-making.
+| Conversation   | Options |
+| -------- | ------- |
+|   A conversation happening with tutor and the student, including multiple steps to help resolve the challenge of the student. Highlight 3 parts of the conversation where the tutor is using some strategy to tutor the student about the math topic. |  Menu with: 5 options about the real-world effective strategy to teach this topic related to the 3 highlighted conversation parts. (Correct Answer: the strategy that most matches this part of the conversation), (Incorrect Ones: please state the reason). For other parts of the conversation, repeat the same menu with the same options. Repeat the MCQ menu 3 times.  |
 
 
 """
@@ -194,19 +194,12 @@ Reason: Encourages informed decision-making.
 template_4 = """
 Can you generate the scenario-based course's research insights part based on the retrieved research paper and the below information? Please follow the template I give you.
 
-'**Course Title:** Teaching Fraction Division\n'
- '\n'
- '**Description:**\n'
- 'Have you ever met a situation where you want to teach division by fractions '
- 'but find yourself unable to explain the concept clearly to the students? In '
- 'this module, we will be introducing effective strategies as a way of '
- 'tutoring students about the division of fractions, focusing on creating '
- 'meaningful representations and connecting different mathematical concepts to '
- 'facilitate deeper understanding.\n'
+Information :
 
-You should generate the below content :
+You should generate the below content:
 
 Research Insights:
+
 Summarize key research findings that support the learning objectives.
 You should have at least 3 paragraphs to talk about these research findings, and add in-text citations.
 Discuss practical applications of these insights.
@@ -214,14 +207,13 @@ An example could be as below and you can use the same structure:
 
 
 "Research says…
- Research paper summary.
- Give summary of research recommendations.
-
+{Research paper context}
+{Summary}
 "
 
 
 Strategy Table:
-Generate a table with three rows and four columns based on the topic of [Objective of the course] according to the research recommendations. TEach row should include the following:
+Generate a table with three rows and four columns based on the topic of [Learning Objective of the course] according to the research recommendations. TEach row should include the following:
 
 
 Strategy: [Specify the strategy about the topic].
