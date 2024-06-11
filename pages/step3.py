@@ -19,17 +19,22 @@ if 'generated_course_4' not in st.session_state:
     st.session_state.generated_course_4 = None
 
 def main():
-    clear_cache()
+    # clear_cache()
     if st.session_state.generated_course_1 is None:
         with st.spinner("We have all we needed. Loading the result."):
             time.sleep(3)
-    result_1 = generate_course_section(st.session_state.key, st.session_state.text, st.session_state.template1)
-    result_2 = generate_course_section(st.session_state.key, st.session_state.text, st.session_state.template2)
-    result_3 = generate_course_section(st.session_state.key, st.session_state.text, st.session_state.template3)
-    result_4 = generate_course_section(st.session_state.key, st.session_state.text, st.session_state.template4)
+    
+    # objective = st.session_state.learning_objective;
+    template1 = st.session_state.template1
+    objective = st.session_state.learning_objective
+    formatted_template = template1.format(learning_objective=objective)
+    result_1 = generate_course_section(st.session_state.key, st.session_state.text, formatted_template)
     st.session_state.generated_course_1 = result_1
+    result_2 = generate_course_section(st.session_state.key, st.session_state.text, st.session_state.template2)
     st.session_state.generated_course_2 = result_2
+    result_3 = generate_course_section(st.session_state.key, st.session_state.text, st.session_state.template3)
     st.session_state.generated_course_3 = result_3
+    result_4 = generate_course_section(st.session_state.key, st.session_state.text, st.session_state.template4)
     st.session_state.generated_course_4 = result_4
 
     st.write(st.session_state.generated_course_1)

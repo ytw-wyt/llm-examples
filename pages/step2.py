@@ -1,10 +1,10 @@
 import streamlit as st
 from langchain_community.vectorstores import Chroma
-from langchain_openai import OpenAIEmbeddings
+from langchain.embeddings import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.schema import Document
-from langchain_openai import ChatOpenAI
+from langchain.chat_models import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from PyPDF2 import PdfReader
 
@@ -36,6 +36,7 @@ Description: A short description about the purpose of this course and why. The s
 
 
 Learning Objectives:
+You should generate based on the given learning objective here {learning_objective}
 Requirement for generation: You should generate 2 learning objectives. The learning objectives should address the "understanding" and the "creating" level of Bloom's taxonomy.
 Creating meanse use information to create something new, understanding means grasp meaning of instructional materials. You should generate two learning objectives.
 
