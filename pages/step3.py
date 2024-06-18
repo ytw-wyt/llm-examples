@@ -3,6 +3,7 @@ from streamlit_extras.switch_page_button import switch_page
 import time
 import streamlit.components.v1 as components
 from pages.step2 import generate_course_section
+
 def clear_cache():
     st.session_state.generated_course_1 = None
     st.session_state.generated_course_2 = None
@@ -20,6 +21,11 @@ if 'generated_course_4' not in st.session_state:
 
 def main():
     # clear_cache()
+    st.session_state.generated_course_1 = None;
+    st.session_state.generated_course_2 = None;
+    st.session_state.generated_course_3 = None;
+    st.session_state.generated_course_4 = None;
+    
     if st.session_state.generated_course_1 is None:
         with st.spinner("We have all we needed. Loading the result."):
             time.sleep(3)

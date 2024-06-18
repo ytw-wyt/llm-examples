@@ -241,6 +241,206 @@ Do not list sources you didn't use.
 
 """
 
+template_1_1 = """
+Do you know what tutoring strategy the paper is talking about? Can you generate a scenario-based tutor training course about how to use the tutoring strategy effectively in classrooms as discussed in the retrieved research paper?
+
+I need your help to generate the course title, description and learning objective,  please follow the below template.
+
+Course Title: Generate a title of this tutor training course using three words, the title should begin with a verb. It should be related to the specific math topic of the research paper and the course objective.
+Example titles are: Using polite language, Managing inequity, Managing effective praise
+
+
+Description: A short description (50-60 words) about the purpose of this course and why it's important for the tutor. The structure could be similar to :  Have you ever met a situation when you are in an online tutoring session, you find your students are [the background of the tutoring topic ] and you want to change the situation? In this module, we will be introducing [strategy name] as a way of tutoring students in an online session more effectively.
+
+
+Learning Objectives (15-20 words for each) :
+Requirement for generation: You should generate 2 learning objectives. The learning objectives should address the "understanding" and the "creating" level of Bloom's taxonomy.
+Creating meanse use information to create something new, understanding means grasp meaning of instructional materials. You should generate two learning objectives.
+
+Objective 1: Describe the expected outcome of this course.
+Objective 2: Outline what learners will achieve by the end of this module regarding the second objective.
+
+One of the objectives should clearly state the most effective strategy about how to apply this tutoring strategy in online tutoring session that is advocated in the retrieved research paper.
+"""
+
+template_1_2 = """
+Scenario-Based Online Tutor Training Course Development
+
+Task: Generate the first scenario for an online tutor training course based on the provided course title and learning objective, using the retrieved research paper. Follow the template below to structure the scenario.
+
+Background information:
+
+(Course Title: Encouraging Camera Usage
+
+Description:
+
+Have you ever found yourself in an online tutoring session where students are disengaged and reluctant to turn on their cameras? In this module, we will introduce strategies for encouraging camera usage to foster a more interactive and inclusive online learning environment. This approach is essential for enhancing communication, building relationships, and improving overall student engagement during online math tutoring sessions.
+
+Learning Objectives:
+
+Understanding: By the end of this module, tutors will be able to explain the importance of camera usage in online tutoring sessions and how it impacts student engagement and learning outcomes.
+Creating: Tutors will be able to develop and implement a plan to encourage camera usage in their online tutoring sessions, ensuring it aligns with best practices for fostering an inclusive and supportive learning environment.
+)
+
+
+You don't need to show the above information again in your output.
+
+You need to generate below components:
+
+Template:
+Scenario Structure:
+Scenario 1: Describe an initial training scenario involving a common situation related to the course topic when a teacher is tutoring online.
+Scenario Context: Create a scenario involving a challenge related to the topic of the paper when the teacher is tutoring a student named [Student Name]. The scenario should focus on the student's response that relates to the course topic. Use approximately 50 words.
+Questions:
+1. Constructed-response Open-Ended Question (Motivation):
+    * Question: Ask participants to propose their response or solution to the scenario, directly addressing the mathematical topic-related issue in the scenario.
+    * Purpose: Initial reaction, free expression.
+    * Reason: Encourages creative thinking and reflection.
+2. Selected-response Question (Assessment of Understanding):
+    * Question: Present four possible tutor responses in conversation style about how to teach this math topic effectively, with varied appropriateness, that could be applied in the scenario. Ask tutors to choose the most effective option.
+    * Requirements:
+        * Make one option correct, aligning with the paper's suggestion.
+        * One option should be obviously wrong/unrelated.
+        * Two options should be close distractions but not aligned with the paper's recommendation.
+        * Ensure all options are similar in length (20-30 words each).
+    * Options:
+        * A. [Option A]
+        * B. [Option B]
+        * C. [Option C]
+        * D. [Option D]
+    * Mark the correct one and explain why the others are incorrect.
+3. Constructed-response Open-Ended Question (Justification):
+    * Question: Ask participants to explain why they chose the specific option in the previous question, detailing the reasoning behind their selection.
+    * Purpose: Encourage deep reasoning and reflection to reinforce the tutor's understanding and justification.
+    * Reason: Ensures participants can justify their choices and demonstrate a solid grasp of effective teaching strategies related to the scenario.
+4. Selected-response Question (Assessment of Understanding):
+    * Question: Present four possible tutor responses about how to teach this math topic effectively (statements, not conversations) that align with the responses in the previous questions, revealing the research-recommended strategy for the formative training scenario. Ask participants to select the principle that best supports their chosen response.
+    * Requirements:
+        * Provide statements reflecting various educational, ethical, or theoretical underpinnings related to the scenario.
+        * Highlight the correct answer.
+    * Options:
+        * A. [Option A]
+        * B. [Option B]
+        * C. [Option C]
+        * D. [Option D]
+    * Mark the correct answer and explain the reason for its selection.
+"""
+
+template_1_3="""
+Task: Generate the second scenario for an online tutor training course based on the provided course title and learning objective, using the retrieved research paper. 
+Follow the template below to structure the scenario.It should be the same difficulty to answer as Scenario 1. 
+The length will also be the same.
+
+
+Background information:
+{
+Course Title: Encouraging Camera Usage
+
+Description:
+
+Have you ever found yourself in an online tutoring session where students are disengaged and reluctant to turn on their cameras? In this module, we will introduce strategies for encouraging camera usage to foster a more interactive and inclusive online learning environment. This approach is essential for enhancing communication, building relationships, and improving overall student engagement during online math tutoring sessions.
+
+Learning Objectives:
+
+Understanding: By the end of this module, tutors will be able to explain the importance of camera usage in online tutoring sessions and how it impacts student engagement and learning outcomes.
+Creating: Tutors will be able to develop and implement a plan to encourage camera usage in their online tutoring sessions, ensuring it aligns with best practices for fostering an inclusive and supportive learning environment.
+
+Scenaio 1 is: 
+
+You are tutoring a student named Alex in an online math session. Despite your efforts to engage him, Alex keeps his camera off and provides minimal responses, making it difficult to gauge his understanding and engagement. You notice that this is affecting the flow of the lesson and your ability to provide effective feedback.
+
+)
+
+Template:
+Scenario Structure:
+Scenario 2: Describe a transfer training scenario involving a common situation related to the course topic when a teacher is tutoring online. This scenario should involve a new student [use a different student name than in Scenario 1] and is designed for tutors who have completed the initial scenario, but still focuses on the same topic.
+Scenario Context: Create a scenario involving a challenge related to the topic of the paper when the teacher is tutoring a student named [Student Name]. The scenario should focus on the student's response that relates to the course topic. Use approximately 50 words.
+
+
+
+Questions:
+1. Constructed-response Open-Ended Question (Motivation):
+    * Question: Ask participants to propose their response or solution to the scenario, directly addressing the mathematical topic-related issue in the scenario.
+    * Purpose: Initial reaction, free expression.
+    * Reason: Encourages creative thinking and reflection.
+2. Selected-response Question (Assessment of Understanding):
+    * Question: Present four possible tutor responses in conversation style about how to teach this math topic effectively, with varied appropriateness, that could be applied in the scenario. Ask tutors to choose the most effective option.
+    * Requirements:
+        * Make one option correct, aligning with the paper's suggestion.
+        * One option should be obviously wrong/unrelated.
+        * Two options should be close distractions but not aligned with the paper's recommendation.
+        * Ensure all options are similar in length (20-30 words each).
+    * Options:
+        * A. [Option A]
+        * B. [Option B]
+        * C. [Option C]
+        * D. [Option D]
+    * Mark the correct one and explain why the others are incorrect.
+3. Constructed-response Open-Ended Question (Justification):
+    * Question: Ask participants to explain why they chose the specific option in the previous question, detailing the reasoning behind their selection.
+    * Purpose: Encourage deep reasoning and reflection to reinforce the tutor's understanding and justification.
+    * Reason: Ensures participants can justify their choices and demonstrate a solid grasp of effective teaching strategies related to the scenario.
+4. Selected-response Question (Assessment of Understanding):
+    * Question: Present four possible tutor responses about how to teach this math topic effectively (statements, not conversations) in the previous questions, revealing the research-recommended strategy for the formative training scenario. Ask participants to select the principle that best supports their chosen response.
+    * Requirements:
+        * Provide statements reflecting various educational, ethical, or theoretical underpinnings related to the scenario.
+        * Highlight the correct answer.
+    * Options:
+        * A. [Option A]
+        * B. [Option B]
+        * C. [Option C]
+        * D. [Option D]
+    * Mark the correct answer and explain the reason for its selection.
+
+"""
+
+template_1_4="""
+Can you generate the scenario-based course's research insights part based on the retrieved research paper and the below information? Please follow the template I give you.
+
+Information :
+
+Course Title: Encouraging Camera Usage
+
+Description:
+
+Have you ever found yourself in an online tutoring session where students are disengaged and reluctant to turn on their cameras? In this module, we will introduce strategies for encouraging camera usage to foster a more interactive and inclusive online learning environment. This approach is essential for enhancing communication, building relationships, and improving overall student engagement during online math tutoring sessions.
+
+Learning Objectives:
+
+Understanding: By the end of this module, tutors will be able to explain the importance of camera usage in online tutoring sessions and how it impacts student engagement and learning outcomes.
+Creating: Tutors will be able to develop and implement a plan to encourage camera usage in their online tutoring sessions, ensuring it aligns with best practices for fostering an inclusive and supportive learning environment.
+
+You should generate the below content:
+
+Research Insights:
+
+Summarize key research findings that support the learning objectives.
+You should have at least 3 paragraphs to talk about these research findings, and add in-text citations.
+Discuss practical applications of these insights.
+An example could be as below and you can use the same structure:
+
+
+"Research says…
+{context}
+{summary}
+"
+
+
+Strategy Table:
+Generate a table with three rows and four columns based on the topic of [Learning Objective of the course] according to the research recommendations. TEach row should include the following:
+
+
+Strategy: [Specify the strategy about the topic].
+Description: [Provide a brief description of the strategy and its effectiveness in communication.]
+Good Example: [Give an example demonstrating how the strategy can be applied in a tutoring scenario, including the tone of a tutor. You should also list the reason why it is correct or not correct]
+Bad Example: [Give an example demonstrating how the strategy can be applied in a tutoring scenario, including the tone of a tutor. You should provide one incorrect example here, to be opposite to a good example. You should also list the reason why it is correct or not correct]
+
+References:
+Cite all scholarly references and sources used in developing this course. You should list the source of the research papers you use here.
+Do not list sources you didn't use.
+"""
+
+
 # Function to read PDFs and extract text
 def read_pdfs(pdf_files):
     docs = []
@@ -326,9 +526,29 @@ def main():
             ["Social Emotional Learning", "Mastery of Content", "Advocary", "Building Relationships", "Utilizing Technology Tools", "Domain Specific Knowledge"].index(st.session_state.topic)
         )
     )
+
+    if st.session_state.topic=="Mastery of Content":
+        st.session_state.is_math_template = True
+    else:
+        st.session_state.is_math_template = False
+        # st.session_state.learning_objective = """1. Identify features of tutors encouraging students' independence when engaging in tutoring  
+        # 2. Explain the importance of encouraging students' independence when working with students  
+        # 3. Apply strategies to encourage students' independence 
+        # """
+    
+    if 'template1' not in st.session_state:
+        st.session_state.template1 = None
+    if 'template2' not in st.session_state:
+        st.session_state.template2 = None
+    if 'template3' not in st.session_state:
+        st.session_state.template3 = None
+    if 'template4' not in st.session_state:
+        st.session_state.template4 = None
+
+    
     # Text input for learning objective
     st.session_state.learning_objective = st.text_input(
-        "What's your learning objective?",
+        "What's your learning objective? (optional)",
         value=st.session_state.learning_objective,
         label_visibility="visible",
         disabled=False,
@@ -354,10 +574,17 @@ def main():
             text_chunks = split_text(docs)
             st.session_state.key = openai_api_key
             st.session_state.text = text_chunks
-            st.session_state.template1 = template_1
-            st.session_state.template2 = template_2
-            st.session_state.template3 = template_3
-            st.session_state.template4 = template_4
+
+            if(st.session_state.is_math_template):
+                st.session_state.template1 = template_1
+                st.session_state.template2 = template_2
+                st.session_state.template3 = template_3
+                st.session_state.template4 = template_4
+            else:
+                st.session_state.template1 = template_1_1
+                st.session_state.template2 = template_1_2
+                st.session_state.template3 = template_1_3
+                st.session_state.template4 = template_1_4
             switch_page("step3")
         else:
             st.warning("Please enter the OpenAI API key and upload PDF files.")
