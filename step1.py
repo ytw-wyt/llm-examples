@@ -529,12 +529,13 @@ def main():
 
     if st.session_state.topic=="Mastery of Content":
         st.session_state.is_math_template = True
-    else:
+        st.session_state.learning_objective = None
+    elif st.session_state.topic!=None:
         st.session_state.is_math_template = False
-        # st.session_state.learning_objective = """1. Identify features of tutors encouraging students' independence when engaging in tutoring  
-        # 2. Explain the importance of encouraging students' independence when working with students  
-        # 3. Apply strategies to encourage students' independence 
-        # """
+        st.session_state.learning_objective = """1. Identify features of tutors encouraging students' independence when engaging in tutoring  
+        2. Explain the importance of encouraging students' independence when working with students  
+        3. Apply strategies to encourage students' independence 
+        """
     
     if 'template1' not in st.session_state:
         st.session_state.template1 = None
@@ -544,11 +545,13 @@ def main():
         st.session_state.template3 = None
     if 'template4' not in st.session_state:
         st.session_state.template4 = None
+    if 'default1' not in st.session_state:
+        st.session_state.default1 = None
 
     
     # Text input for learning objective
     st.session_state.learning_objective = st.text_input(
-        "What's your learning objective? (optional)",
+        "What's the lesson's learning objective? (optional)",
         value=st.session_state.learning_objective,
         label_visibility="visible",
         disabled=False,
@@ -560,6 +563,25 @@ def main():
     # clear_cache()
 
     uploaded_files = st.file_uploader("Upload PDF files (please enter less than five files)", type=["pdf"], accept_multiple_files=True)
+    example_files = {
+        "Example 1": "documents/p1.pdf",
+        "Example 2": "documents/p2.pdf"
+    }
+    # Providing download links for example files if no files are uploaded
+    if st.session_state.topic != "Mastery of Content" and st.session_state.topic != None and not uploaded_files:
+        st.session_state.default1 = True
+        uploaded_files = [open(path, "rb") for name, path in example_files.items()]
+        st.write("Default files already uploaded:")
+        for name, path in example_files.items():  # Iterating over each item in the dictionary
+            with open(path, "rb") as file:
+                st.download_button(
+                    label=f"Download {name}",
+                    data=file,
+                    file_name=f"{name}.pdf",
+                    mime='application/pdf'
+                )
+    else:
+        st.session_state.default1 = False
     
     col1, col2 = st.columns([3.5,1.5])
     with col1:pass
@@ -585,7 +607,10 @@ def main():
                 st.session_state.template2 = template_1_2
                 st.session_state.template3 = template_1_3
                 st.session_state.template4 = template_1_4
-            switch_page("step3")
+            if st.session_state.default1:
+                switch_page("example");
+            else:
+                switch_page("step3")
         else:
             st.warning("Please enter the OpenAI API key and upload PDF files.")
 
