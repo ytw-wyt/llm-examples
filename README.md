@@ -2,7 +2,7 @@
 
 ## Overview of the App
 
-This app can be used to generate lessons for tutors by using LLM.
+This app is used to generate lessons for tutors by using LLM.
 
 Input need to be entered before creating a lesson: 
 - topic
