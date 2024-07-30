@@ -1,6 +1,9 @@
 import streamlit as st
 from streamlit_extras.switch_page_button import switch_page
 import os
+from st_pages import Page, Section, show_pages, add_indentation
+
+add_indentation()
 
 st.write(st.session_state.generated_course_4)
 # Navigation buttons
@@ -50,7 +53,7 @@ col1, col2, col3 = st.columns([1, 5, 1])
 
 with col1:
     if st.button("Previous"):
-        pass
+        switch_page("Page 3: Scenario 2")
 
 # with col2:
 #     st.download_button(

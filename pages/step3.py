@@ -3,6 +3,9 @@ from streamlit_extras.switch_page_button import switch_page
 import time
 import streamlit.components.v1 as components
 from pages.step2 import generate_course_section
+from st_pages import Page, Section, show_pages, add_indentation
+
+add_indentation()
 
 def clear_cache():
     st.session_state.generated_course_1 = None
@@ -25,7 +28,7 @@ def main():
     st.session_state.generated_course_2 = None;
     st.session_state.generated_course_3 = None;
     st.session_state.generated_course_4 = None;
-    
+
     if st.session_state.generated_course_1 is None:
         with st.spinner("We have all we needed. Loading the result."):
             time.sleep(3)
@@ -53,7 +56,7 @@ def main():
 
     with col2:
         if st.button("Next"):
-            switch_page("step3 result2")
+            switch_page("page2")
 
 if __name__ == "__main__":
     main()

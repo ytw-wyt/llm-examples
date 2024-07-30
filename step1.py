@@ -4,11 +4,35 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 from langchain.schema import Document
-from langchain.chat_models import ChatOpenAI
+# from langchain.chat_models import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from PyPDF2 import PdfReader
 
+import openai
+from langchain_openai import ChatOpenAI
+
+
 from streamlit_extras.switch_page_button import switch_page
+from st_pages import Page, Section, show_pages, add_indentation
+
+add_indentation()
+
+show_pages(
+    [
+        Page("step1.py", "Create a new lesson", "🏠"),
+        Section(name = "Example Lessons", icon="🎈️"),
+        # Pages after a section will be indented
+        Page("pages/example.py", name = "example1", icon=":star:"),
+        Page("pages/example2.py", name = "example2", icon=":star:"),
+        # Unless you explicitly say in_section=False
+        Section(name = "Result", icon="🎈️"),
+        Page("pages/step3.py", name = "Page 1: Introduction"),
+        Page("pages/step3_result2.py", name = "Page 2: scenario 1"),
+        Page("pages/step3_result3.py", name = "Page 3: Scenario 2"),
+        Page("pages/step3_result4.py", name = "Page 4: Research Says")
+
+    ]
+)
 
 if "visibility" not in st.session_state:
     st.session_state.visibility = "visible"
@@ -504,38 +528,53 @@ def generate_course_section(openai_api_key, _text_chunks, template):
 
 # Streamlit interface
 def main():
-    st.text("What are you looking to learn today?")
-    st.header("Input your customized course topic")
+    st.text("Create new lessons for tutors! ")
+    st.header("Input your customized course information")
+
     if 'topic' not in st.session_state:
         st.session_state.topic = None
 
     if 'learning_objective' not in st.session_state:
         st.session_state.learning_objective = ""
 
+    # st.session_state.topic = st.selectbox(
+    #     "Select a topic",
+    #     (
+    #         "Social Emotional Learning", 
+    #         "Mastery of Content", 
+    #         "Advocary", 
+    #         "Building Relationships", 
+    #         "Utilizing Technology Tools", 
+    #         "Other"
+    #     ),
+    #     index=None if st.session_state.topic is None else (
+    #         ["Social Emotional Learning", "Mastery of Content", "Advocary", "Building Relationships", "Utilizing Technology Tools", "Other"].index(st.session_state.topic)
+    #     )
+    # )
+    topics = ["Social Emotional Learning", "Mastery of Content", "Advocary", "Building Relationships", "Utilizing Technology Tools", "Other"]
+
+    # Set the selectbox value to "Other" if the current topic is not in the list
+    if 'topic' in st.session_state and st.session_state.topic not in topics:
+        st.session_state.topic = "Other"
+
+    # Get the index of the current topic or default to None
+    index = None if 'topic' not in st.session_state else topics.index(st.session_state.topic)
+
+    # Create the selectbox
     st.session_state.topic = st.selectbox(
         "Select a topic",
-        (
-            "Social Emotional Learning", 
-            "Mastery of Content", 
-            "Advocary", 
-            "Building Relationships", 
-            "Utilizing Technology Tools", 
-            "Domain Specific Knowledge"
-        ),
-        index=None if st.session_state.topic is None else (
-            ["Social Emotional Learning", "Mastery of Content", "Advocary", "Building Relationships", "Utilizing Technology Tools", "Domain Specific Knowledge"].index(st.session_state.topic)
-        )
+        topics,
+        index=index
     )
+
+    # If "Other" is selected, show a text input for the user to enter a custom topic
+    if st.session_state.topic == "Other":
+        st.session_state.topic = st.text_input("Enter the topic: ", label_visibility="visible")
 
     if st.session_state.topic=="Mastery of Content":
         st.session_state.is_math_template = True
-        st.session_state.learning_objective = None
     elif st.session_state.topic!=None:
         st.session_state.is_math_template = False
-        st.session_state.learning_objective = """1. Identify features of tutors encouraging students' independence when engaging in tutoring  
-        2. Explain the importance of encouraging students' independence when working with students  
-        3. Apply strategies to encourage students' independence 
-        """
     
     if 'template1' not in st.session_state:
         st.session_state.template1 = None
@@ -545,17 +584,21 @@ def main():
         st.session_state.template3 = None
     if 'template4' not in st.session_state:
         st.session_state.template4 = None
-    if 'default1' not in st.session_state:
-        st.session_state.default1 = None
+    
+    if 'example' not in st.session_state:
+        st.session_state.example = """What's the lesson's learning objective? (optional)                                              
+        (Example: 1. Identify features of tutors encouraging students' independence when engaging in tutoring  
+        2. Explain the importance of encouraging students' independence when working with students  
+        3. Apply strategies to encourage students' independence)"""
 
+    # if st.session_state.topic!= None and st.session_state.topic == "Other":
+    #     st.session_state.topic = st.text_input("Enter the topic: ", label_visibility="visible")
     
     # Text input for learning objective
     st.session_state.learning_objective = st.text_input(
-        "What's the lesson's learning objective? (optional)",
-        value=st.session_state.learning_objective,
+        st.session_state.example,
         label_visibility="visible",
-        disabled=False,
-        placeholder="Enter your objective here..."
+        disabled=False
     )
 
     openai_api_key = st.text_input("OpenAI API Key", type="password")
@@ -563,31 +606,16 @@ def main():
     # clear_cache()
 
     uploaded_files = st.file_uploader("Upload PDF files (please enter less than five files)", type=["pdf"], accept_multiple_files=True)
-    example_files = {
-        "Example 1": "documents/p1.pdf",
-        "Example 2": "documents/p2.pdf"
-    }
-    # Providing download links for example files if no files are uploaded
-    if st.session_state.topic != "Mastery of Content" and st.session_state.topic != None and not uploaded_files:
-        st.session_state.default1 = True
-        uploaded_files = [open(path, "rb") for name, path in example_files.items()]
-        st.write("Default files already uploaded:")
-        for name, path in example_files.items():  # Iterating over each item in the dictionary
-            with open(path, "rb") as file:
-                st.download_button(
-                    label=f"Download {name}",
-                    data=file,
-                    file_name=f"{name}.pdf",
-                    mime='application/pdf'
-                )
-    else:
-        st.session_state.default1 = False
-    
-    col1, col2 = st.columns([3.5,1.5])
-    with col1:pass
+
+    col1, col2 = st.columns([3.1,1.5])
+    with col1:
+        example_button = st.button("Visit pre-generated example lesson")
+        
+    if example_button:
+        switch_page("example2");
 
     with col2:
-        generate_button = st.button("Generate Course Section")
+        generate_button = st.button("Generate Customized Lesson")
 
     if generate_button: 
         # switch_page("step3")
@@ -607,12 +635,12 @@ def main():
                 st.session_state.template2 = template_1_2
                 st.session_state.template3 = template_1_3
                 st.session_state.template4 = template_1_4
-            if st.session_state.default1:
-                switch_page("example");
-            else:
-                switch_page("step3")
+            
+            switch_page("Page 1: Introduction")
+        # elif not openai_api_key and not uploaded_files: 
+        #     switch_page("example1");
         else:
-            st.warning("Please enter the OpenAI API key and upload PDF files.")
+            st.warning("Please enter either the OpenAI API key or upload PDF files, or it will jump to pre-generated example")
 
 if __name__ == "__main__":
     main()

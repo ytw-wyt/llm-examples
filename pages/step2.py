@@ -9,6 +9,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from PyPDF2 import PdfReader
 
 from streamlit_extras.switch_page_button import switch_page
+from st_pages import Page, Section, show_pages, add_indentation
+
+add_indentation()
 
 # Define your prompt template without the context placeholder
 prompt_template = """
