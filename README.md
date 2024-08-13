@@ -19,7 +19,9 @@ virtualenv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 streamlit run step1.py
+git checkout dev
 ```
+* The last step is because this code is still in the developing mode
 
 References: Streamlit + LLM Examples App
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)
